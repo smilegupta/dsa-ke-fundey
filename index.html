@@ -62,6 +62,10 @@
       </div>
 
       <div class="stats" id="stats-panel">
+        <div class="stat-item" id="current-set-display" style="display: none">
+          <span class="stat-label">SET</span>
+          <span class="stat-value set-name" id="current-set-name">-</span>
+        </div>
         <div class="stat-item">
           <span class="stat-label">SOLVED</span>
           <span class="stat-value" id="solved-count">0</span>
@@ -136,12 +140,49 @@ console.log('Sum:', arr.reduce((a, b) => a + b, 0));
       </div>
     </main>
 
+    <!-- SET SELECTOR VIEW -->
+    <main class="set-selector-mode" id="set-selector-view">
+      <div class="set-selector-container">
+        <div class="set-selector-header">
+          <h1 class="set-selector-title">
+            <span class="glitch" data-text="SELECT A SET">SELECT A SET</span>
+          </h1>
+          <p class="set-selector-subtitle">
+            Choose a question pack to practice
+          </p>
+        </div>
+        <div class="set-grid" id="set-grid">
+          <!-- Sets will be populated by JS -->
+        </div>
+        <div class="set-empty-state" id="set-empty-state" style="display: none">
+          <div class="empty-icon">📦</div>
+          <h3>No Question Sets Found</h3>
+          <p>
+            Add question sets to the <code>questions/</code> folder to get
+            started.
+          </p>
+          <p class="hint">
+            Check the README for instructions on creating question sets.
+          </p>
+        </div>
+      </div>
+    </main>
+
     <!-- CHALLENGES MODE -->
     <main class="challenges-mode" id="challenges-view">
       <aside class="challenge-panel">
-        <h2 class="panel-title">
-          <span class="glitch" data-text="CHALLENGES">CHALLENGES</span>
-        </h2>
+        <div class="panel-header-row">
+          <button
+            class="back-to-sets-btn"
+            id="back-to-sets"
+            title="Back to Sets"
+          >
+            ← Back
+          </button>
+          <h2 class="panel-title">
+            <span class="glitch" data-text="CHALLENGES">CHALLENGES</span>
+          </h2>
+        </div>
         <div class="difficulty-filter">
           <button class="filter-btn active" data-difficulty="all">ALL</button>
           <button class="filter-btn easy" data-difficulty="easy">EASY</button>
@@ -258,7 +299,7 @@ console.log('Sum:', arr.reduce((a, b) => a + b, 0));
     <canvas id="confetti-canvas"></canvas>
 
     <!-- Load questions from separate file -->
-    <script src="questions/sample-questions.js"></script>
+    <script src="questions/question-sets.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

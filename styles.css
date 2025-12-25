@@ -413,6 +413,233 @@ body.resizing * {
 }
 
 /* ==================== */
+/* SET SELECTOR MODE */
+/* ==================== */
+.set-selector-mode {
+  display: none;
+  height: calc(100vh - 90px);
+  background: var(--bg-primary);
+  overflow-y: auto;
+}
+
+.set-selector-mode.active {
+  display: block;
+}
+
+.set-selector-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.set-selector-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.set-selector-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.5rem;
+  color: var(--accent-cyan);
+  text-shadow: var(--glow-cyan);
+  margin-bottom: 0.5rem;
+}
+
+.set-selector-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.set-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.set-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.set-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--set-color, var(--accent-cyan));
+  opacity: 0.8;
+}
+
+.set-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--set-color, var(--accent-cyan));
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3),
+    0 0 20px
+      color-mix(in srgb, var(--set-color, var(--accent-cyan)) 30%, transparent);
+}
+
+.set-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.set-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.set-info {
+  flex: 1;
+}
+
+.set-name {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.set-difficulty {
+  font-size: 0.75rem;
+  color: var(--set-color, var(--accent-cyan));
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.set-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.set-stats {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.set-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.set-stat-value {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.set-progress {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-bar {
+  width: 60px;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: var(--accent-green);
+}
+
+/* Empty state */
+.set-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.set-empty-state h3 {
+  font-family: "Orbitron", sans-serif;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.set-empty-state code {
+  background: var(--bg-tertiary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--accent-cyan);
+}
+
+.set-empty-state .hint {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Back button */
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.back-to-sets-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-to-sets-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+/* Current set display */
+.stat-value.set-name {
+  font-size: 0.9rem;
+  color: var(--accent-pink);
+  text-shadow: var(--glow-pink);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==================== */
 /* CHALLENGES MODE */
 /* ==================== */
 .challenges-mode {

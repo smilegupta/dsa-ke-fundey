@@ -2,14 +2,16 @@
 // By Smile Gupta
 // ===========================================
 
-// Load challenges from external file (if available)
-const challenges = window.sampleQuestions || [];
+// Question sets are loaded from questions/question-sets.js
+// They're available via window.questionSets
 
 // App State
+let currentMode = "playground"; // 'playground', 'set-selector', or 'challenges'
+let currentSet = null;
 let currentChallenge = null;
-let currentMode = "playground"; // 'playground' or 'challenges'
+let challenges = []; // Currently loaded challenges from selected set
 let solvedChallenges =
-  JSON.parse(localStorage.getItem("solvedChallenges")) || [];
+  JSON.parse(localStorage.getItem("solvedChallenges")) || {};
 
 // DOM Elements - Challenges Mode
 const challengeList = document.getElementById("challenge-list");
@@ -33,6 +35,9 @@ const confettiCanvas = document.getElementById("confetti-canvas");
 const testModal = document.getElementById("test-modal");
 const closeModal = document.getElementById("close-modal");
 const testCasesList = document.getElementById("test-cases-list");
+const backToSetsBtn = document.getElementById("back-to-sets");
+const currentSetDisplay = document.getElementById("current-set-display");
+const currentSetName = document.getElementById("current-set-name");
 
 // DOM Elements - Playground Mode
 const playgroundEditor = document.getElementById("playground-editor");
@@ -56,22 +61,19 @@ const resizeHandle = document.getElementById("resize-handle");
 // DOM Elements - Mode Toggle
 const modeBtns = document.querySelectorAll(".mode-btn");
 const playgroundView = document.getElementById("playground-view");
+const setSelectorView = document.getElementById("set-selector-view");
 const challengesView = document.getElementById("challenges-view");
 const statsPanel = document.getElementById("stats-panel");
+
+// DOM Elements - Set Selector
+const setGrid = document.getElementById("set-grid");
+const setEmptyState = document.getElementById("set-empty-state");
 
 // Initialize
 function init() {
   setupModeToggle();
   setupPlayground();
-
-  // Only setup challenges if there are any
-  if (challenges.length > 0) {
-    renderChallengeList();
-    updateStats();
-    setupChallengesEventListeners();
-    setupCollapsibleSections();
-    updateLineNumbers();
-  }
+  renderSetSelector();
 
   // Start in playground mode
   switchMode("playground");
@@ -82,7 +84,12 @@ function setupModeToggle() {
   modeBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
       const mode = btn.dataset.mode;
-      switchMode(mode);
+      if (mode === "challenges") {
+        // Go to set selector first, not directly to challenges
+        switchMode("set-selector");
+      } else {
+        switchMode(mode);
+      }
     });
   });
 }
@@ -93,28 +100,132 @@ function switchMode(mode) {
 
   // Update button states
   modeBtns.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.mode === mode);
+    if (mode === "set-selector" || mode === "challenges") {
+      btn.classList.toggle("active", btn.dataset.mode === "challenges");
+    } else {
+      btn.classList.toggle("active", btn.dataset.mode === mode);
+    }
   });
 
-  // Toggle views
+  // Hide all views
+  playgroundView.classList.remove("active");
+  setSelectorView.classList.remove("active");
+  challengesView.classList.remove("active");
+
+  // Show appropriate view
   if (mode === "playground") {
     playgroundView.classList.add("active");
-    challengesView.classList.remove("active");
     document.body.classList.add("playground-active");
+    currentSetDisplay.style.display = "none";
     updatePlaygroundLineNumbers();
-  } else {
-    playgroundView.classList.remove("active");
+  } else if (mode === "set-selector") {
+    setSelectorView.classList.add("active");
+    document.body.classList.remove("playground-active");
+    currentSetDisplay.style.display = "none";
+    renderSetSelector(); // Refresh in case solved status changed
+  } else if (mode === "challenges") {
     challengesView.classList.add("active");
     document.body.classList.remove("playground-active");
-
-    // If no challenges, show message
-    if (challenges.length === 0) {
-      showToast(
-        "No challenges loaded. Add questions to questions/ folder.",
-        "info"
-      );
-    }
+    currentSetDisplay.style.display = "block";
   }
+}
+
+// ==================== SET SELECTOR ====================
+
+function renderSetSelector() {
+  const sets = window.questionSets || [];
+
+  if (sets.length === 0) {
+    setGrid.style.display = "none";
+    setEmptyState.style.display = "block";
+    return;
+  }
+
+  setGrid.style.display = "grid";
+  setEmptyState.style.display = "none";
+  setGrid.innerHTML = "";
+
+  sets.forEach((set, index) => {
+    const solved = getSolvedCountForSet(set.id);
+    const total = set.questions.length;
+    const progress = total > 0 ? Math.round((solved / total) * 100) : 0;
+
+    const card = document.createElement("div");
+    card.className = "set-card";
+    card.style.setProperty("--set-color", set.color || "#00fff7");
+    card.style.animationDelay = `${index * 0.1}s`;
+
+    card.innerHTML = `
+      <div class="set-card-header">
+        <span class="set-icon">${set.icon || "📦"}</span>
+        <div class="set-info">
+          <div class="set-name">${set.name}</div>
+          <div class="set-difficulty">${set.difficulty || "Mixed"}</div>
+        </div>
+      </div>
+      <p class="set-description">${set.description || "Practice problems"}</p>
+      <div class="set-stats">
+        <div class="set-stat">
+          <span>📝</span>
+          <span class="set-stat-value">${total}</span> problems
+        </div>
+        <div class="set-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress}%"></div>
+          </div>
+          <span class="progress-text">${solved}/${total}</span>
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", () => selectSet(set));
+    setGrid.appendChild(card);
+  });
+}
+
+function selectSet(set) {
+  currentSet = set;
+  challenges = set.questions;
+
+  // Update UI
+  currentSetName.textContent = set.name;
+
+  // Setup challenges mode
+  renderChallengeList();
+  updateStats();
+  setupChallengesEventListeners();
+  setupCollapsibleSections();
+  updateLineNumbers();
+
+  // Reset problem view
+  problemTitle.textContent = "Select a Challenge";
+  problemDescription.innerHTML =
+    "<p>👈 Pick a challenge from the left panel to begin!</p>";
+  problemExamples.innerHTML = "";
+  difficultyBadge.textContent = "-";
+  difficultyBadge.className = "difficulty-badge";
+  codeEditor.value = "";
+  clearOutputContent();
+
+  // Switch to challenges view
+  switchMode("challenges");
+
+  showToast(
+    `Loaded "${set.name}" - ${challenges.length} problems 🎯`,
+    "success"
+  );
+}
+
+function getSolvedCountForSet(setId) {
+  const setKey = `set_${setId}`;
+  return (solvedChallenges[setKey] || []).length;
+}
+
+function goBackToSets() {
+  currentSet = null;
+  currentChallenge = null;
+  challenges = [];
+  switchMode("set-selector");
 }
 
 // ==================== PLAYGROUND MODE ====================
@@ -375,21 +486,25 @@ function setupCollapsibleSections() {
   const sectionHeaders = document.querySelectorAll(".section-header");
 
   sectionHeaders.forEach((header) => {
-    header.addEventListener("click", (e) => {
+    // Remove existing listeners by cloning
+    const newHeader = header.cloneNode(true);
+    header.parentNode.replaceChild(newHeader, header);
+
+    newHeader.addEventListener("click", (e) => {
       // Don't collapse if clicking on buttons
       if (e.target.closest(".action-btn") || e.target.closest(".clear-btn")) {
         return;
       }
 
-      const targetId = header.dataset.target;
+      const targetId = newHeader.dataset.target;
       const content = document.getElementById(targetId);
-      const section = header.closest(".collapsible-section");
+      const section = newHeader.closest(".collapsible-section");
 
       if (content && section) {
         const isExpanding = !content.classList.contains("expanded");
 
         content.classList.toggle("expanded");
-        header.classList.toggle("collapsed");
+        newHeader.classList.toggle("collapsed");
         section.classList.toggle("section-expanded", isExpanding);
         section.classList.toggle("section-collapsed", !isExpanding);
       }
@@ -425,10 +540,13 @@ function renderChallengeList(filter = "all") {
     return;
   }
 
+  const setKey = currentSet ? `set_${currentSet.id}` : "default";
+  const solvedInSet = solvedChallenges[setKey] || [];
+
   filteredChallenges.forEach((challenge, index) => {
     const li = document.createElement("li");
     li.className = `challenge-item ${
-      solvedChallenges.includes(challenge.id) ? "solved" : ""
+      solvedInSet.includes(challenge.id) ? "solved" : ""
     }`;
     li.dataset.id = challenge.id;
     li.style.animationDelay = `${index * 0.05}s`;
@@ -506,13 +624,18 @@ Output: ${ex.output}${
 }
 
 // Setup event listeners for challenges mode
+let challengeListenersSetup = false;
 function setupChallengesEventListeners() {
+  if (challengeListenersSetup) return;
+  challengeListenersSetup = true;
+
   runBtn.addEventListener("click", () => runCode(false));
   runTestsBtn.addEventListener("click", () => runCode(true));
   viewTestsBtn.addEventListener("click", showTestCases);
   resetBtn.addEventListener("click", resetCode);
   clearOutput.addEventListener("click", clearOutputContent);
   closeModal.addEventListener("click", hideTestCases);
+  backToSetsBtn.addEventListener("click", goBackToSets);
 
   // Close modal on overlay click
   testModal.addEventListener("click", (e) => {
@@ -752,8 +875,15 @@ function hideTestCases() {
 
 // Mark challenge as solved
 function markAsSolved() {
-  if (!solvedChallenges.includes(currentChallenge.id)) {
-    solvedChallenges.push(currentChallenge.id);
+  if (!currentSet || !currentChallenge) return;
+
+  const setKey = `set_${currentSet.id}`;
+  if (!solvedChallenges[setKey]) {
+    solvedChallenges[setKey] = [];
+  }
+
+  if (!solvedChallenges[setKey].includes(currentChallenge.id)) {
+    solvedChallenges[setKey].push(currentChallenge.id);
     localStorage.setItem("solvedChallenges", JSON.stringify(solvedChallenges));
 
     // Update UI
@@ -770,7 +900,14 @@ function markAsSolved() {
 
 // Update stats display
 function updateStats() {
-  solvedCount.textContent = solvedChallenges.length;
+  if (!currentSet) {
+    solvedCount.textContent = "0";
+    return;
+  }
+
+  const setKey = `set_${currentSet.id}`;
+  const solved = (solvedChallenges[setKey] || []).length;
+  solvedCount.textContent = solved;
 }
 
 // Reset code
