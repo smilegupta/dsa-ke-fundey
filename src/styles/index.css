@@ -306,6 +306,7 @@ body.playground-active #stats-panel {
   min-height: 0;
 }
 
+.playground-editor-container textarea,
 #playground-editor {
   flex: 1;
   padding: 1rem;
@@ -321,11 +322,13 @@ body.playground-active #stats-panel {
   overflow-y: auto;
 }
 
+.playground-editor-container textarea::placeholder,
 #playground-editor::placeholder {
   color: var(--text-secondary);
   opacity: 0.7;
 }
 
+.line-numbers,
 #playground-line-numbers {
   padding: 1rem 0.5rem;
   background: var(--bg-tertiary);

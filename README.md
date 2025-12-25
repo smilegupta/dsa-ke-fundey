@@ -4,9 +4,9 @@
 
 Created with ❤️ by **Smile Gupta**
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![React](https://img.shields.io/badge/React-18.2-61DAFB?style=flat&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=flat&logo=vite&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)
 
 ---
 
@@ -26,15 +26,14 @@ Created with ❤️ by **Smile Gupta**
 - **Line Numbers**: Auto-updating line numbers
 - **Tab Support**: Proper indentation with Tab key
 - **Keyboard Shortcuts**: `Ctrl/Cmd + Enter` to run code
-- **Double-click Divider**: Reset to 50/50 split
 
 ### 🎯 Challenges Mode
 
-- **20+ DSA Problems**: Easy, Medium, and Hard difficulties
-- **Categories**: Arrays, Strings, Math, Sorting, Dynamic Programming, and more
+- **Question Sets**: Themed question packs to choose from
+- **Multiple Difficulties**: Easy, Medium, and Hard
+- **Categories**: Arrays, Strings, Math, DP, and more
 - **Interactive Test Cases**: Run and validate your solutions
-- **Progress Tracking**: Solved problems saved to local storage
-- **Collapsible Sections**: Problem, Solution, and Output panels expand/collapse
+- **Progress Tracking**: Solved problems saved to localStorage
 
 ### 🎨 Cyberpunk Aesthetics
 
@@ -48,22 +47,28 @@ Created with ❤️ by **Smile Gupta**
 
 ## 🚀 Quick Start
 
-### Option 1: Direct Open
+### Prerequisites
 
-Simply double-click `index.html` or drag it into your browser.
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- npm (comes with Node.js)
 
-### Option 2: Live Server
+### Installation
 
 ```bash
-# Using VS Code Live Server extension
-# Right-click index.html → Open with Live Server
+# Clone the repository
+git clone https://github.com/smilegupta/dsa-ke-funde.git
 
-# Or using Python
-python -m http.server 8000
+# Navigate to the project
+cd dsa-ke-funde
 
-# Or using Node.js
-npx serve
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
 ```
+
+The app will open at `http://localhost:3000`
 
 ---
 
@@ -71,22 +76,39 @@ npx serve
 
 ```
 DSA Ke Funde/
-├── index.html              # Main HTML file
-├── styles.css              # Cyberpunk styling
-├── script.js               # App logic & functionality
-├── questions/
-│   └── question-sets.js    # Question sets/packs
-└── README.md               # You're reading this!
+├── index.html              # Entry HTML
+├── package.json            # Dependencies & scripts
+├── vite.config.js          # Vite configuration
+├── .gitignore              # Git ignore rules
+├── README.md               # Documentation
+├── public/                 # Static assets
+└── src/
+    ├── main.jsx            # React entry point
+    ├── App.jsx             # Main App component
+    ├── components/
+    │   ├── Header.jsx      # Header with logo & mode toggle
+    │   ├── Playground.jsx  # Simple JS playground
+    │   ├── SetSelector.jsx # Question set picker
+    │   ├── Challenges.jsx  # Challenge workspace
+    │   ├── CodeEditor.jsx  # Reusable code editor
+    │   ├── OutputPanel.jsx # Output display
+    │   ├── TestModal.jsx   # Test cases modal
+    │   ├── Toast.jsx       # Toast notifications
+    │   └── Confetti.jsx    # Celebration effect
+    ├── data/
+    │   └── questionSets.js # Question sets data
+    └── styles/
+        └── index.css       # All styles
 ```
 
 ---
 
 ## 📝 Adding Custom Question Sets
 
-Edit `questions/question-sets.js` to create themed question packs:
+Edit `src/data/questionSets.js`:
 
 ```javascript
-const questionSets = [
+export const questionSets = [
   {
     id: "my-custom-set", // Unique ID
     name: "My Custom Set", // Display name
@@ -127,21 +149,7 @@ console.log(solution([1, 2, 3]));`,
   },
   // Add more sets...
 ];
-
-window.questionSets = questionSets;
 ```
-
-### Question Set Properties
-
-| Property      | Description                          |
-| ------------- | ------------------------------------ |
-| `id`          | Unique identifier (used for storage) |
-| `name`        | Display name shown on card           |
-| `icon`        | Emoji shown on card                  |
-| `description` | Brief description of the set         |
-| `difficulty`  | Overall difficulty level             |
-| `color`       | Theme color for the card             |
-| `questions`   | Array of question objects            |
 
 ---
 
@@ -168,12 +176,22 @@ window.questionSets = questionSets;
 
 ---
 
+## 🛠️ Scripts
+
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start development server |
+| `npm run build`   | Build for production     |
+| `npm run preview` | Preview production build |
+
+---
+
 ## 🌟 Tech Stack
 
-- **HTML5** - Semantic markup
+- **React 18** - UI library
+- **Vite** - Build tool & dev server
 - **CSS3** - Custom properties, Flexbox, Grid, Animations
-- **Vanilla JavaScript** - No frameworks, pure JS
-- **Local Storage** - Progress persistence
+- **localStorage** - Progress persistence
 - **Google Fonts** - JetBrains Mono, Orbitron, Poppins
 
 ---
@@ -192,7 +210,7 @@ window.questionSets = questionSets;
 
 Feel free to:
 
-- Add new challenges
+- Add new question sets
 - Improve styling
 - Fix bugs
 - Suggest features
