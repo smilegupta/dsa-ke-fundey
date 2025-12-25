@@ -1,12 +1,26 @@
 # 🚀 DSA Ke Funde
 
-> **A cyberpunk-themed JavaScript playground for learning and practicing Data Structures & Algorithms**
+> **A JavaScript playground for learning and practicing Data Structures & Algorithms**
 
 Created with ❤️ by **Smile Gupta**
 
 ![React](https://img.shields.io/badge/React-18.2-61DAFB?style=flat&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=flat&logo=vite&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+---
+
+## 🧠 About
+
+**DSA Ke Funde** is a simple, hands-on platform to practice Data Structures and Algorithms using JavaScript.
+
+It focuses on:
+- Clear problem statements
+- Writing real code
+- Running test cases
+- Building strong fundamentals step by step
+
+This is meant to feel like a **thinking space**, not a grind.
 
 ---
 
@@ -20,28 +34,18 @@ Created with ❤️ by **Smile Gupta**
 | 🎯 **Challenges** | Full DSA practice environment with problems, test cases, and solutions  |
 
 ### 🛠️ Playground Mode
-
-- **Clean Split View**: Code editor on the left, output console on the right
-- **Resizable Panels**: Drag the divider to adjust editor/output sizes
-- **Line Numbers**: Auto-updating line numbers
-- **Tab Support**: Proper indentation with Tab key
-- **Keyboard Shortcuts**: `Ctrl/Cmd + Enter` to run code
+- Split view editor and output console
+- Resizable panels
+- Line numbers
+- Tab indentation support
+- Keyboard shortcut to run code (`Ctrl/Cmd + Enter`)
 
 ### 🎯 Challenges Mode
-
-- **Question Sets**: Themed question packs to choose from
-- **Multiple Difficulties**: Easy, Medium, and Hard
-- **Categories**: Arrays, Strings, Math, DP, and more
-- **Interactive Test Cases**: Run and validate your solutions
-- **Progress Tracking**: Solved problems saved to localStorage
-
-### 🎨 Cyberpunk Aesthetics
-
-- Neon glow effects (cyan, pink, green)
-- Scanline overlay animation
-- Glitch text effects
-- Dark theme optimized for long coding sessions
-- Confetti celebration on solving challenges! 🎉
+- Curated question sets
+- Easy, Medium, and Hard problems
+- Categories like Arrays, Strings, Math, DP, and more
+- Run and validate solutions with test cases
+- Progress saved using localStorage
 
 ---
 
