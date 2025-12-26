@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import Editor from "@monaco-editor/react";
 
 function CodeEditor({
@@ -7,9 +8,12 @@ function CodeEditor({
   placeholder,
   readOnly = false,
 }) {
-  // Custom cyberpunk theme
+  const editorRef = useRef(null);
+
   const handleEditorDidMount = (editor, monaco) => {
-    // Define custom theme
+    editorRef.current = editor;
+
+    // Define custom cyberpunk theme
     monaco.editor.defineTheme("cyberpunk", {
       base: "vs-dark",
       inherit: true,
@@ -31,7 +35,7 @@ function CodeEditor({
         "editor.lineHighlightBackground": "#1a1a2e",
         "editor.selectionBackground": "#ff2d9540",
         "editor.inactiveSelectionBackground": "#ff2d9520",
-        "editorLineNumber.foreground": "#4a4a5a",
+        "editorLineNumber.foreground": "#888899",
         "editorLineNumber.activeForeground": "#00d4ff",
         "editorCursor.foreground": "#00d4ff",
         "editorWhitespace.foreground": "#2a2a3a",
@@ -77,7 +81,6 @@ function CodeEditor({
       }
     );
 
-    // Focus the editor
     editor.focus();
   };
 
@@ -91,6 +94,7 @@ function CodeEditor({
     <div className="monaco-editor-container">
       <Editor
         height="100%"
+        width="100%"
         defaultLanguage="javascript"
         value={code}
         onChange={handleChange}
@@ -107,6 +111,7 @@ function CodeEditor({
             "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace",
           fontLigatures: true,
           lineNumbers: "on",
+          lineNumbersMinChars: 3,
           minimap: {
             enabled: true,
             scale: 1,
@@ -116,11 +121,11 @@ function CodeEditor({
           automaticLayout: true,
           tabSize: 2,
           wordWrap: "on",
-          padding: { top: 16, bottom: 16 },
+          padding: { top: 12, bottom: 12 },
           cursorBlinking: "smooth",
           cursorSmoothCaretAnimation: "on",
           smoothScrolling: true,
-          renderLineHighlight: "all",
+          renderLineHighlight: "line",
           renderWhitespace: "selection",
           bracketPairColorization: { enabled: true },
           guides: {
@@ -138,7 +143,8 @@ function CodeEditor({
           showFoldingControls: "mouseover",
           readOnly: readOnly,
           domReadOnly: readOnly,
-          placeholder: placeholder,
+          glyphMargin: false,
+          lineDecorationsWidth: 10,
         }}
       />
     </div>

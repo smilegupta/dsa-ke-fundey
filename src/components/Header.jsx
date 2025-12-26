@@ -36,18 +36,18 @@ function Header({ mode, onModeSwitch, currentSet, solvedCount }) {
       </div>
 
       {isChallengeModeActive && (
-        <div className="stats" id="stats-panel">
-          {currentSet && (
-            <div className="stat-item">
-              <span className="stat-label">SET</span>
-              <span className="stat-value set-name">{currentSet.name}</span>
-            </div>
-          )}
+      <div className="stats" id="stats-panel">
+        {currentSet && (
           <div className="stat-item">
-            <span className="stat-label">SOLVED</span>
-            <span className="stat-value">{solvedCount}</span>
+            <span className="stat-label">SET</span>
+            <span className="stat-value set-name">{currentSet.name}</span>
           </div>
+        )}
+        <div className="stat-item">
+          <span className="stat-label">SOLVED</span>
+          <span className="stat-value">{solvedCount}</span>
         </div>
+      </div>
       )}
     </header>
   )

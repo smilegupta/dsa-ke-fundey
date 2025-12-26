@@ -243,12 +243,15 @@ body.playground-active #stats-panel {
 }
 
 .playground-mode.active {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .playground-container {
   display: flex;
+  flex: 1;
   height: 100%;
+  min-height: 0;
   background: var(--border-color);
 }
 
@@ -260,6 +263,7 @@ body.playground-active #stats-panel {
   width: 50%;
   min-width: 200px;
   max-width: calc(100% - 200px);
+  height: 100%;
 }
 
 .playground-output {
@@ -303,12 +307,45 @@ body.playground-active #stats-panel {
 .monaco-editor-container {
   flex: 1;
   min-height: 0;
+  height: 100%;
   overflow: hidden;
   background: #0a0a12;
 }
 
-.monaco-editor-container .monaco-editor {
-  padding-top: 0 !important;
+/* Ensure Monaco line numbers are visible - override any conflicting styles */
+.monaco-editor .margin-view-overlays .line-numbers {
+  color: #888899 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: inline-block !important;
+  padding: 0 !important;
+  background: transparent !important;
+  min-width: auto !important;
+  border: none !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  text-align: right !important;
+  overflow: visible !important;
+}
+
+.monaco-editor .margin-view-overlays .current-line-margin .line-numbers {
+  color: #00d4ff !important;
+}
+
+/* Ensure the margin container is visible */
+.monaco-editor .margin {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.monaco-editor .margin-view-overlays {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.monaco-editor .margin-view-overlays > div {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Monaco loading state */
@@ -372,7 +409,8 @@ body.playground-active #stats-panel {
   opacity: 0.7;
 }
 
-.line-numbers,
+/* Old textarea line numbers - use specific class to avoid Monaco conflict */
+.custom-line-numbers,
 #playground-line-numbers {
   padding: 1rem 0.5rem;
   background: var(--bg-tertiary);
@@ -702,9 +740,9 @@ body.resizing * {
   display: grid;
 }
 
-/* Main layout - keep for backwards compat */
+/* Main layout */
 main {
-  /* Base styles handled by mode classes */
+  display: block;
 }
 
 /* Challenge Panel */
@@ -1238,9 +1276,11 @@ main {
   flex: 1;
   overflow: hidden;
   min-height: 0;
+  height: 100%;
 }
 
-.line-numbers {
+/* Custom textarea line numbers - renamed to avoid Monaco conflict */
+.custom-line-numbers {
   padding: 1rem 0.5rem;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
