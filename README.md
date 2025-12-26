@@ -15,6 +15,7 @@ Created with ❤️ by **Smile Gupta**
 **DSA Ke Funde** is a simple, hands-on platform to practice Data Structures and Algorithms using JavaScript.
 
 It focuses on:
+
 - Clear problem statements
 - Writing real code
 - Running test cases
@@ -34,13 +35,19 @@ This is meant to feel like a **thinking space**, not a grind.
 | 🎯 **Challenges** | Full DSA practice environment with problems, test cases, and solutions  |
 
 ### 🛠️ Playground Mode
+
+- **Monaco Editor** (same editor that powers VS Code!)
+  - Syntax highlighting
+  - IntelliSense / Autocomplete
+  - Bracket matching & colorization
+  - Minimap navigation
+  - Code folding
 - Split view editor and output console
-- Resizable panels
-- Line numbers
-- Tab indentation support
+- Resizable panels with drag handle
 - Keyboard shortcut to run code (`Ctrl/Cmd + Enter`)
 
 ### 🎯 Challenges Mode
+
 - Curated question sets
 - Easy, Medium, and Hard problems
 - Categories like Arrays, Strings, Math, DP, and more
@@ -194,6 +201,7 @@ console.log(solution([1, 2, 3]));`,
 
 - **React 18** - UI library
 - **Vite** - Build tool & dev server
+- **Monaco Editor** - Professional code editor (powers VS Code)
 - **CSS3** - Custom properties, Flexbox, Grid, Animations
 - **localStorage** - Progress persistence
 - **Google Fonts** - JetBrains Mono, Orbitron, Poppins

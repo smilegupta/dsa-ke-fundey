@@ -1,131 +1,159 @@
-import { useState, useRef, useEffect } from 'react'
-import CodeEditor from './CodeEditor'
-import OutputPanel from './OutputPanel'
+import { useState, useRef, useEffect, useCallback } from "react";
+import CodeEditor from "./CodeEditor";
+import OutputPanel from "./OutputPanel";
 
-function Playground({ showToast }) {
-  const [code, setCode] = useState(`// Write your JavaScript code here...
+const DEFAULT_CODE = `// 🚀 Welcome to DSA Ke Funde Playground!
+// Write your JavaScript code here and hit RUN (or Ctrl/Cmd + Enter)
 
-console.log('Hello, World!');
+console.log('Hello, World! 👋');
 
 // Try some DSA:
 const arr = [1, 2, 3, 4, 5];
+console.log('Array:', arr);
 console.log('Sum:', arr.reduce((a, b) => a + b, 0));
-`)
-  const [output, setOutput] = useState([])
-  const [isResizing, setIsResizing] = useState(false)
-  const [editorWidth, setEditorWidth] = useState(50)
-  const containerRef = useRef(null)
+console.log('Max:', Math.max(...arr));
+
+// Write a function:
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log('Fibonacci(10):', fibonacci(10));
+`;
+
+function Playground({ showToast }) {
+  const [code, setCode] = useState(DEFAULT_CODE);
+  const [output, setOutput] = useState([]);
+  const [isResizing, setIsResizing] = useState(false);
+  const [editorWidth, setEditorWidth] = useState(50);
+  const containerRef = useRef(null);
+  const codeRef = useRef(code);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    codeRef.current = code;
+  }, [code]);
 
   // Handle resize
   const handleMouseDown = (e) => {
-    setIsResizing(true)
-    e.preventDefault()
-  }
+    setIsResizing(true);
+    e.preventDefault();
+  };
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!isResizing || !containerRef.current) return
-      
-      const containerRect = containerRef.current.getBoundingClientRect()
-      const newWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100
-      setEditorWidth(Math.max(20, Math.min(80, newWidth)))
-    }
+      if (!isResizing || !containerRef.current) return;
+
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const newWidth =
+        ((e.clientX - containerRect.left) / containerRect.width) * 100;
+      setEditorWidth(Math.max(20, Math.min(80, newWidth)));
+    };
 
     const handleMouseUp = () => {
-      setIsResizing(false)
-    }
+      setIsResizing(false);
+    };
 
     if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = 'col-resize'
-      document.body.style.userSelect = 'none'
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = ''
-      document.body.style.userSelect = ''
-    }
-  }, [isResizing])
-
-  // Run code
-  const runCode = () => {
-    setOutput([])
-    
-    if (!code.trim()) {
-      setOutput([{ type: 'placeholder', message: 'Write some code and hit RUN...' }])
-      return
-    }
-
-    const logs = []
-    const originalLog = console.log
-    const originalError = console.error
-    const originalWarn = console.warn
-
-    console.log = (...args) => {
-      logs.push({ type: 'log', message: formatArgs(args) })
-    }
-    console.error = (...args) => {
-      logs.push({ type: 'error', message: formatArgs(args) })
-    }
-    console.warn = (...args) => {
-      logs.push({ type: 'warn', message: formatArgs(args) })
-    }
-
-    try {
-      const result = eval(code)
-      
-      console.log = originalLog
-      console.error = originalError
-      console.warn = originalWarn
-
-      if (logs.length > 0) {
-        setOutput(logs)
-      } else if (result !== undefined) {
-        setOutput([{ type: 'success', message: formatValue(result), prefix: '←' }])
-      } else {
-        setOutput([{ type: 'success', message: 'Code executed successfully (no output)' }])
-      }
-    } catch (error) {
-      console.log = originalLog
-      console.error = originalError
-      console.warn = originalWarn
-      setOutput([{ type: 'error', message: error.message, prefix: '✗' }])
-    }
-  }
-
-  const formatArgs = (args) => args.map(formatValue).join(' ')
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing]);
 
   const formatValue = (val) => {
-    if (val === null) return 'null'
-    if (val === undefined) return 'undefined'
-    if (typeof val === 'object') {
+    if (val === null) return "null";
+    if (val === undefined) return "undefined";
+    if (typeof val === "object") {
       try {
-        return JSON.stringify(val, null, 2)
+        return JSON.stringify(val, null, 2);
       } catch {
-        return String(val)
+        return String(val);
       }
     }
-    return String(val)
-  }
+    return String(val);
+  };
+
+  const formatArgs = (args) => args.map(formatValue).join(" ");
+
+  // Run code - uses ref to always get latest code
+  const runCode = useCallback(() => {
+    const currentCode = codeRef.current;
+    setOutput([]);
+
+    if (!currentCode.trim()) {
+      setOutput([
+        { type: "placeholder", message: "Write some code and hit RUN..." },
+      ]);
+      return;
+    }
+
+    const logs = [];
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalWarn = console.warn;
+
+    console.log = (...args) => {
+      logs.push({ type: "log", message: formatArgs(args) });
+    };
+    console.error = (...args) => {
+      logs.push({ type: "error", message: formatArgs(args) });
+    };
+    console.warn = (...args) => {
+      logs.push({ type: "warn", message: formatArgs(args) });
+    };
+
+    try {
+      const result = eval(currentCode);
+
+      console.log = originalLog;
+      console.error = originalError;
+      console.warn = originalWarn;
+
+      if (logs.length > 0) {
+        setOutput(logs);
+      } else if (result !== undefined) {
+        setOutput([
+          { type: "success", message: formatValue(result), prefix: "←" },
+        ]);
+      } else {
+        setOutput([
+          {
+            type: "success",
+            message: "Code executed successfully (no output)",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log = originalLog;
+      console.error = originalError;
+      console.warn = originalWarn;
+      setOutput([{ type: "error", message: error.message, prefix: "✗" }]);
+    }
+  }, []);
 
   const clearCode = () => {
-    setCode('')
-    showToast('Editor cleared', 'info')
-  }
+    setCode("");
+    showToast("Editor cleared", "info");
+  };
 
   const clearOutput = () => {
-    setOutput([])
-  }
+    setOutput([]);
+  };
 
-  // Handle keyboard shortcut
-  const handleKeyDown = (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      runCode()
-    }
-  }
+  // Keyboard shortcut handler for Monaco
+  const handleKeyDown = useCallback(() => {
+    runCode();
+  }, [runCode]);
 
   return (
     <main className="playground-mode active">
@@ -145,24 +173,26 @@ console.log('Sum:', arr.reduce((a, b) => a + b, 0));
               </button>
             </div>
           </div>
-          <CodeEditor 
-            code={code} 
-            onChange={setCode} 
+          <CodeEditor
+            code={code}
+            onChange={setCode}
             onKeyDown={handleKeyDown}
           />
         </div>
 
-        <div 
-          className={`resize-handle ${isResizing ? 'dragging' : ''}`}
+        <div
+          className={`resize-handle ${isResizing ? "dragging" : ""}`}
           onMouseDown={handleMouseDown}
           onDoubleClick={() => {
-            setEditorWidth(50)
-            showToast('Reset to 50/50 split', 'info')
+            setEditorWidth(50);
+            showToast("Reset to 50/50 split", "info");
           }}
         >
           <div className="resize-line" />
           <div className="resize-dots">
-            <span /><span /><span />
+            <span />
+            <span />
+            <span />
           </div>
           <div className="resize-line" />
         </div>
@@ -181,8 +211,7 @@ console.log('Sum:', arr.reduce((a, b) => a + b, 0));
         </div>
       </div>
     </main>
-  )
+  );
 }
 
-export default Playground
-
+export default Playground;
